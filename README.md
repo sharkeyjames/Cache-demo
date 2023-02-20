@@ -15,7 +15,7 @@ npx serve ./website
 ```sh
 cd api
 bundle install
-ruby myapp.rb
+ruby api.rb
 ```
 
 Navigate to http://localhost:3000/
