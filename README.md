@@ -1,6 +1,6 @@
 # Cache Demo
 
-This project helps demonstrate interactions between `disk cache` and the `Last-Modified` response header.
+Demonstration tool for interactions between browsers, and cache related response headers.
 
 ## Running the demo
 
