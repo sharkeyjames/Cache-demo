@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Cache Demo</title>
+    <meta name="description" content="Cache Demo" />
+    <meta name="author" content="James Sharkey" />
+
+    <!-- Styling -->
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    <!-- Script -->
+    <script>
+      const API_ENDPOINT = "http://127.0.0.1:4567";
+
+      async function fetchName() {
+        const requestTime = new Date()
+          .toLocaleString("en-GB", {
+            hour12: false,
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+          .replace(/(?:(\d),)/, "$1");
+        const response = await fetch(`${API_ENDPOINT}/name`);
+        document.getElementById("fetch_name_response").innerHTML = `
+        <dl>
+          <dt>Response value</dt>
+          <dd>${await response.text()}</dd>
+
+          <dt>Last modified</dt>
+          <dd>${response.headers.get("Last-Modified")}</dd>
+
+          <dt>Request made at</dt>
+          <dd>${requestTime}</dd>
+        </dl>`;
+      }
+
+      async function updateName() {
+        const form = document.getElementById("update_name_form");
+        const formData = new FormData(form);
+        const newName = formData.get("name_value");
+        await fetch(`${API_ENDPOINT}/name`, {
+          method: "POST",
+          body: newName,
+        });
+        form.reset();
+      }
+
+      async function fetchFavouriteFood() {
+        const requestTime = new Date()
+          .toLocaleString("en-GB", {
+            hour12: false,
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+          .replace(/(?:(\d),)/, "$1");
+        const response = await fetch(`${API_ENDPOINT}/favourite-food`);
+        document.getElementById("fetch_favourite_food_response").innerHTML = `
+        <dl>
+          <dt>Response value</dt>
+          <dd>${await response.text()}</dd>
+
+          <dt>Request made at</dt>
+          <dd>${requestTime}</dd>
+        </dl>`;
+      }
+
+      async function updateFavouriteFood() {
+        const form = document.getElementById("update_favourite_food_form");
+        const formData = new FormData(form);
+        const newFavouriteFood = formData.get("favourite_food_value");
+        await fetch(`${API_ENDPOINT}/favourite-food`, {
+          method: "POST",
+          body: newFavouriteFood,
+        });
+        form.reset();
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Cache Demo</h1>
+      <p>
+        Demonstration tool for interactions between browsers, and cache related
+        response headers.
+      </p>
+    </header>
+    <main>
+      <section>
+        <h2>Last-Modified</h2>
+        <label>
+          Send a <code>GET</code> request to the <code>/name</code> endpoint
+        </label>
+        <input
+          id="fetch_name"
+          name="fetch_name"
+          type="button"
+          value="Fetch name"
+          onclick="fetchName()"
+        />
+        <code id="fetch_name_response">
+          <dl>
+            <dt>Response value</dt>
+            <dd>...</dd>
+
+            <dt>Last modified</dt>
+            <dd>...</dd>
+
+            <dt>Request made at</dt>
+            <dd>...</dd>
+          </dl>
+        </code>
+        <form
+          id="update_name_form"
+          onsubmit="event.preventDefault(); updateName()"
+        >
+          <label for="name_value">Update name value</label>
+          <input type="text" name="name_value" id="name_value" required />
+          <input type="submit" value="Update" />
+        </form>
+      </section>
+      <section>
+        <h2>ETag</h2>
+        <label>
+          Send a <code>GET</code> request to the
+          <code>/favourite-food</code> endpoint
+        </label>
+        <input
+          id="fetch_favourite_food"
+          name="fetch_favourite_food"
+          type="button"
+          value="Fetch favourite food"
+          onclick="fetchFavouriteFood()"
+        />
+        <code id="fetch_favourite_food_response">
+          <dl>
+            <dt>Response value</dt>
+            <dd>...</dd>
+
+            <dt>Request made at</dt>
+            <dd>...</dd>
+          </dl>
+        </code>
+        <form
+          id="update_favourite_food_form"
+          onsubmit="event.preventDefault(); updateFavouriteFood()"
+        >
+          <label for="favourite_food_value">Update favourite food value</label>
+          <input
+            type="text"
+            name="favourite_food_value"
+            id="favourite_food_value"
+            required
+          />
+          <input type="submit" value="Update" />
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
